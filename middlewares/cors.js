@@ -1,8 +1,8 @@
 const allowedCors = [
-  'https://domainname.studens.nomorepartiesxyz.ru',
-  'http://domainname.studens.nomorepartiesxyz.ru',
-  'https://api.backend.nomoredomains.xyz',
-  'http://api.backend.nomoredomains.xyz',
+  'https://frontend.movie.project.nomoredomains.xyz',
+  'http://frontend.movie.project.nomoredomains.xyz',
+  'https://backend.movie.project.nomoredomains.xyz',
+  'http://backend.movie.project.nomoredomains.xyz',
   'http://localhost:3000',
   'localhost:3000',
 ];

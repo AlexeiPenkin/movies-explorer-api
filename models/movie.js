@@ -15,7 +15,7 @@ const movieSchema = new mongoose.Schema({
     required: true
   },
   year: {
-    type: String, /* Number */
+    type: Number,
     required: true
   },
   description: {
