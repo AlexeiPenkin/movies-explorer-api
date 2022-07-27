@@ -3,7 +3,7 @@ const movieRoutes = require('express').Router();
 const {
   getMovies,
   deleteMovie,
-  createMovie
+  createMovie,
 } = require('../controllers/movie');
 
 const {
@@ -17,4 +17,4 @@ movieRoutes.post('/', createMovieValidation, createMovie);
 
 movieRoutes.delete('/:userMovieId', userMovieIdValidation, deleteMovie);
 
-module.exports = { movieRoutes };
+module.exports = movieRoutes;

@@ -5,11 +5,11 @@ const {
 } = require('../controllers/user');
 
 const {
-  updateProfileValidation
+  updateProfileValidation,
 } = require('../middlewares/validation');
 
-userRoutes.get('/me', getUserById);
+userRoutes.get('/users/me', getUserById);
 
-userRoutes.patch('/me', updateProfileValidation, updateProfile);
+userRoutes.patch('/users/me', updateProfileValidation, updateProfile);
 
-module.exports = { userRoutes };
+module.exports = userRoutes;

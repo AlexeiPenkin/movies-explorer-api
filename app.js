@@ -4,11 +4,12 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const cookie = require('cookie-parser');
-const {cors} = require('./middlewares/cors');
+const { cors } = require('./middlewares/cors');
 const { createUser, login } = require('./controllers/user');
 const auth = require('./middlewares/auth');
-const user = require('./routes/user');
-const movie = require('./routes/movie');
+// const routes = require('./routes/index');
+// const user = require('./routes/user');
+// const movie = require('./routes/movie');
 const { createUserValidation, loginValidation } = require('./middlewares/validation');
 const NOT_FOUND_ERROR = require('./errors/notfound-error');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -24,7 +25,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cors);
 
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb');
+mongoose.connect('mongodb://localhost:27017/moviesdb');
 
 app.use(requestLogger);
 
@@ -40,9 +41,9 @@ app.post('/signin', loginValidation, login);
 
 app.use(auth);
 
-app.use('/users', user);
+// app.use('/users', user);
 
-app.use('/movies', movie);
+// app.use('/movies', movie);
 
 app.use(errorLogger);
 
