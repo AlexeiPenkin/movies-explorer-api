@@ -8,14 +8,14 @@ module.exports.getUserByIdValidation = celebrate({
   }),
 });
 
-module.exports.createUserValidation = celebrate({
+module.exports.createUserValidation = celebrate({ /* /sigup */
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).required(),
     email: Joi.string().required().custom((value, error) => {
       if (isEmail(value)) {
         return value;
       }
-      return error.message('Некорректный формат адреса')
+      return error.message('Некорректный формат адреса');
     }),
     password: Joi.string().required().min(6),
   }),
@@ -28,18 +28,18 @@ module.exports.updateProfileValidation = celebrate({
       if (isEmail(value)) {
         return value;
       }
-      return error.message('Некорректный формат адреса')
+      return error.message('Некорректный формат адреса');
     }),
   }),
 });
 
-module.exports.loginValidation = celebrate({
+module.exports.loginValidation = celebrate({ /* /sigin */
   body: Joi.object().keys({
     email: Joi.string().required().custom((value, error) => {
       if (isEmail(value)) {
         return value;
       }
-      return error.message('Некорректный формат адреса')
+      return error.message('Некорректный формат адреса');
     }),
     password: Joi.string().required().min(8),
   }),
