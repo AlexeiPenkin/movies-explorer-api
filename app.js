@@ -1,33 +1,35 @@
+/* eslint-disable no-console */
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const cookie = require('cookie-parser');
+const limiter = require('./middlewares/limiter');
 const { cors } = require('./middlewares/cors');
-const { createUser, login } = require('./controllers/user');
-const auth = require('./middlewares/auth');
-// const routes = require('./routes/index');
-// const user = require('./routes/user');
-// const movie = require('./routes/movie');
-const { createUserValidation, loginValidation } = require('./middlewares/validation');
+const router = require('./routes/index');
+
 const NOT_FOUND_ERROR = require('./errors/notfound-error');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, NODE_ENV, MONGO_DB } = process.env;
 const app = express();
-app.use(cookie());
 
-console.log(process.env.NODE_ENV);
+mongoose.connect(NODE_ENV === 'production' ? MONGO_DB : 'mongodb://localhost:27017/moviesdb', {
+  useUnifiedTopology: true,
+  useNewUrlParser: true,
+});
+
+app.use(cookie());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cors);
 
-mongoose.connect('mongodb://localhost:27017/moviesdb');
-
 app.use(requestLogger);
+
+app.use(limiter);
 
 app.get('/crash-test', () => {
   setTimeout(() => {
@@ -35,29 +37,19 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.post('/signup', createUserValidation, createUser);
+app.use(router);
 
-app.post('/signin', loginValidation, login);
-
-app.use(auth);
-
-// app.use('/users', user);
-
-// app.use('/movies', movie);
+app.use('/*', (req, res, next) => next(new NOT_FOUND_ERROR('Страницы не существует')));
 
 app.use(errorLogger);
 
 app.use(errors());
 
-app.use('/*', (req, res, next) => next(new NOT_FOUND_ERROR('Страницы не существует')));
-
-/* eslint-disable-next-line */
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   const { statusCode = 500, message } = err;
   res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
 });
 
 app.listen(PORT, () => {
-  // eslint-disable-next-line no-console
   console.log(`App listening on port ${PORT}`);
 });

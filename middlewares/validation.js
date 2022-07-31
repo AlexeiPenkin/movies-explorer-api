@@ -17,7 +17,7 @@ module.exports.createUserValidation = celebrate({ /* /sigup */
       }
       return error.message('Некорректный формат адреса');
     }),
-    password: Joi.string().required().min(6),
+    password: Joi.string().required(),
   }),
 });
 
@@ -61,7 +61,7 @@ module.exports.createMovieValidation = celebrate({
     country: Joi.string().required(),
     director: Joi.string().required(),
     duration: Joi.number().required(),
-    year: Joi.number().required(),
+    year: Joi.string().required(),
     description: Joi.string().required(),
     image: Joi.string().required().custom((value, error) => {
       if (isURL(value)) {

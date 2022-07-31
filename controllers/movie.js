@@ -4,8 +4,11 @@ const FORBIDDEN_ERROR = require('../errors/forbidden-error');
 const NOT_FOUND_ERROR = require('../errors/notfound-error');
 
 module.exports.getMovies = (req, res, next) => {
-  movies.find({})
-    .then((movies) => res.send({ data: movies }))
+  const owner = req.use._id;
+  movie.find({ owner })
+    .then((movies) => {
+      res.status(200).res.send(movies);
+    })
     .catch(next);
 };
 
@@ -21,7 +24,7 @@ module.exports.createMovie = (req, res, next) => {
     thumbnail,
     movieId,
     nameRU,
-    nameEN
+    nameEN,
   } = req.body;
   const ownerMovieId = req.user._id;
   movie.create({
@@ -36,9 +39,9 @@ module.exports.createMovie = (req, res, next) => {
     movieId,
     nameRU,
     nameEN,
-    owner: ownerMovieId
+    owner: ownerMovieId,
   })
-    .then((movie) => res.status(200)
+    .then(() => res.status(200)
       .send({ data: movie }))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
@@ -54,14 +57,14 @@ module.exports.deleteMovie = (req, res, next) => {
     .orFail(() => {
       throw new NOT_FOUND_ERROR('Карточка с фильмом по указанному id не найдена');
     })
-    .then((movie) => {
+    .then(() => {
       if (String(movie.owner) !== String(req.user._id)) {
         throw new FORBIDDEN_ERROR('Запрещено удалять чужую карточку');
       }
     })
     .then(() => {
       movie.findByIdAndRemove(req.params.movieId)
-        .then((movie) => {
+        .then(() => {
           if (!movie) {
             throw new BAD_REQUEST_ERROR('Переданы некорректные данные');
           } return res.send({ movie });
