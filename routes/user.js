@@ -1,12 +1,14 @@
 const userRouter = require('express').Router();
 
 const {
-  getUserById, updateProfile,
+  getUserById, updateProfile, createUser,
 } = require('../controllers/user');
 
 const {
-  updateProfileValidation,
+  updateProfileValidation, createUserValidation,
 } = require('../middlewares/validation');
+
+userRouter.post('/users', createUserValidation, createUser);
 
 userRouter.get('/users/me', getUserById);
 

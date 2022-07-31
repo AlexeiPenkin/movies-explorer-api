@@ -14,7 +14,12 @@ module.exports.getUserById = (req, res, next) => {
       if (!user) {
         throw new NOT_FOUND_ERROR('Пользователь не найден');
       } else {
-        res.send(user);
+        res.send({
+          data: {
+            name: user.name,
+            email: user.email,
+          },
+        });
       }
     })
     .catch((err) => {
@@ -27,12 +32,12 @@ module.exports.getUserById = (req, res, next) => {
 };
 
 module.exports.createUser = (req, res, next) => {
-  bcrypt.hash(req.body.password, 10)
+  const { name, email, password } = req.body;
+  bcrypt.hash(password, 10)
     .then((hash) => {
-      console.log(hash);
-      return User.create({
-        name: req.body.name,
-        email: req.body.email,
+      User.create({
+        name,
+        email,
         password: hash,
       });
     })
@@ -60,7 +65,12 @@ module.exports.updateProfile = (req, res, next) => {
       if (!user) {
         throw new NOT_FOUND_ERROR('Пользователь не найден');
       } else {
-        res.send(user);
+        res.send({
+          data: {
+            name: user.name,
+            email: user.email,
+          },
+        });
       }
     })
     .catch((err) => {
