@@ -1,6 +1,6 @@
 const allowedCors = [
-  'https://frontend.movie.project.nomoredomains.xyz',
-  'http://frontend.movie.project.nomoredomains.xyz',
+  // 'https://frontend.movie.project.nomoredomains.xyz',
+  // 'http://frontend.movie.project.nomoredomains.xyz',
   'https://backend.movie.project.nomoredomains.xyz',
   'http://backend.movie.project.nomoredomains.xyz',
   'http://localhost:3000',
