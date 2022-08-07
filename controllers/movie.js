@@ -4,10 +4,10 @@ const FORBIDDEN_ERROR = require('../errors/forbidden-error');
 const NOT_FOUND_ERROR = require('../errors/notfound-error');
 
 module.exports.getMovies = (req, res, next) => {
-  const owner = req.use._id;
-  Movie.find({ owner })
+  // const owner = req.user;
+  Movie.find({})
     .then((movies) => {
-      res.status(200).res.send({ data: movies });
+      res.status(200).send({ data: movies });
     })
     .catch(next);
 };
@@ -44,7 +44,7 @@ module.exports.createMovie = (req, res, next) => {
     .then((movie) => res.status(200)
       .send({ data: movie }))
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
+      if (err.name === 'ValidationError') {
         throw new BAD_REQUEST_ERROR('Переданы некорректные данные');
       } else {
         next(err);

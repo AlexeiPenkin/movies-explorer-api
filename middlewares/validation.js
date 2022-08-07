@@ -1,6 +1,5 @@
 const { celebrate, Joi } = require('celebrate');
 const { isURL, isEmail } = require('validator');
-const ObjectId = require('mongoose').Types;
 
 module.exports.getUserByIdValidation = celebrate({
   params: Joi.object().keys({
@@ -47,12 +46,7 @@ module.exports.loginValidation = celebrate({ /* /sigin */
 
 module.exports.userMovieIdValidation = celebrate({
   params: Joi.object().keys({
-    userMovieId: Joi.string().required().custom((value, error) => {
-      if (ObjectId.isValid(value)) {
-        return value;
-      }
-      return error.message('Некорректный id');
-    }),
+    userMovieId: Joi.string().length(24).hex(),
   }),
 });
 
