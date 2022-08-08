@@ -63,7 +63,7 @@ module.exports.deleteMovie = (req, res, next) => {
       }
     })
     .then(() => {
-      Movie.findByIdAndRemove(req.params.movieId)
+      Movie.findByIdAndRemove(req.params.userMovieId)
         .then((movie) => {
           if (!movie) {
             throw new BAD_REQUEST_ERROR('Переданы некорректные данные');

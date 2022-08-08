@@ -23,7 +23,7 @@ module.exports.createUserValidation = celebrate({ /* /sigup */
 module.exports.updateProfileValidation = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
-    email: Joi.string().required().custom((value, error) => {
+    email: Joi.string().custom((value, error) => {
       if (isEmail(value)) {
         return value;
       }
