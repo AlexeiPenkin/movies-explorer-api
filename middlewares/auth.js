@@ -11,7 +11,7 @@ module.exports = (req, res, next) => {
   }
 
   const token = authorization.replace('Bearer ', '');
-
+  console.log(token);
   let payload;
 
   try {
@@ -22,5 +22,5 @@ module.exports = (req, res, next) => {
 
   req.user = payload;
 
-  return next();
+  next();
 };

@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-// require('dotenv').config();
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -12,8 +12,8 @@ const router = require('./routes/index');
 const NOT_FOUND_ERROR = require('./errors/notfound-error');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const { PORT = 3000, NODE_ENV, MONGO_DB } = process.env;
 const app = express();
+const { PORT = 3000, NODE_ENV, MONGO_DB } = process.env;
 
 mongoose.connect(NODE_ENV === 'production' ? MONGO_DB : 'mongodb://localhost:27017/moviesdb', {
   useUnifiedTopology: true,

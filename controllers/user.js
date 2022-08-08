@@ -14,12 +14,7 @@ module.exports.getUserById = (req, res, next) => {
       if (!user) {
         throw new NOT_FOUND_ERROR('Пользователь не найден');
       } else {
-        res.send({
-          data: {
-            name: user.name,
-            email: user.email,
-          },
-        });
+        res.send(user);
       }
     })
     .catch((err) => {
