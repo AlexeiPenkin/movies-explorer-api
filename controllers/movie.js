@@ -4,7 +4,7 @@ const FORBIDDEN_ERROR = require('../errors/forbidden-error');
 const NOT_FOUND_ERROR = require('../errors/notfound-error');
 
 module.exports.getMovies = (req, res, next) => {
-  // const owner = req.user;
+  // const owner = req.user._id;
   Movie.find({})
     .then((movies) => {
       res.status(200).send({ data: movies });
@@ -26,7 +26,7 @@ module.exports.createMovie = (req, res, next) => {
     nameRU,
     nameEN,
   } = req.body;
-  const ownerMovieId = req.user._id;
+  const owner = req.user._id;
   Movie.create({
     country,
     director,
@@ -39,7 +39,7 @@ module.exports.createMovie = (req, res, next) => {
     movieId,
     nameRU,
     nameEN,
-    owner: ownerMovieId,
+    owner,
   })
     .then((movie) => res.status(200)
       .send({ data: movie }))
@@ -53,28 +53,15 @@ module.exports.createMovie = (req, res, next) => {
 };
 
 module.exports.deleteMovie = (req, res, next) => {
-  Movie.findById(req.params.userMovieId)
-    .orFail(() => {
-      throw new NOT_FOUND_ERROR('Карточка с фильмом по указанному id не найдена');
-    })
+  Movie.findById(req.params._id)
     .then((movie) => {
-      if (String(movie.owner) !== String(req.user._id)) {
+      if (!movie) {
+        throw new NOT_FOUND_ERROR('Карточка с указанным id не найдена');
+      } else if (String(movie.owner._id) !== String(req.user._id)) {
         throw new FORBIDDEN_ERROR('Запрещено удалять чужую карточку');
-      }
-    })
-    .then(() => {
-      Movie.findByIdAndRemove(req.params.userMovieId)
-        .then((movie) => {
-          if (!movie) {
-            throw new BAD_REQUEST_ERROR('Переданы некорректные данные');
-          } return res.send({ movie });
-        });
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        throw new NOT_FOUND_ERROR('Карточка с фильмом по указанному id не найдена');
       } else {
-        next(err);
+        return movie.remove()
+          .then(() => res.send({ message: 'Карточка с фильмом успешно удалена' }));
       }
-    });
+    }).catch(next);
 };
