@@ -78,25 +78,3 @@ module.exports.deleteMovie = (req, res, next) => {
       }
     });
 };
-
-// module.exports.deleteMovie = (req, res, next) => {
-//   Movie.findById(req.params._id)
-//     .orFail(() => {
-//       throw new NOT_FOUND_ERROR('Карточка с фильмом по указанному id не найдена');
-//     })
-//     .then((movie) => {
-//       if (String(movie.owner) !== req.user._id) {
-//         throw new FORBIDDEN_ERROR('Запрещено удалять чужую карточку');
-//       }
-//       Movie.findByIdAndRemove(req.params._id)
-//         .then(() => res.send({ movie }))
-//         .catch(next);
-//     })
-//     .catch((err) => {
-//       if (err.name === 'CastError') {
-//         throw new BAD_REQUEST_ERROR('Переданы некорректные данные');
-//       } else {
-//         next(err);
-//       }
-//     });
-// };
