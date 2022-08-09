@@ -9,7 +9,6 @@ router.post('/signup', createUserValidation, createUser);
 
 router.post('/signin', loginValidation, login);
 
-// console.log();
 router.use(auth);
 
 router.use('/users', userRouter);
