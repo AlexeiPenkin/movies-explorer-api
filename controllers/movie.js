@@ -54,14 +54,49 @@ module.exports.createMovie = (req, res, next) => {
 
 module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(req.params._id)
+    .orFail(() => {
+      throw new NOT_FOUND_ERROR('Карточка с фильмом по указанному id не найдена');
+    })
     .then((movie) => {
-      if (!movie) {
-        throw new NOT_FOUND_ERROR('Карточка с указанным id не найдена');
-      } else if (String(movie.owner._id) !== String(req.user._id)) {
+      if (String(movie.owner) !== String(req.user._id)) {
         throw new FORBIDDEN_ERROR('Запрещено удалять чужую карточку');
-      } else {
-        return movie.remove()
-          .then(() => res.send({ message: 'Карточка с фильмом успешно удалена' }));
       }
-    }).catch(next);
+    })
+    .then(() => {
+      Movie.findByIdAndRemove(req.params._id)
+        .then((movie) => {
+          if (!movie) {
+            throw new BAD_REQUEST_ERROR('Переданы некорректные данные');
+          } return res.send({ movie });
+        });
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        throw new NOT_FOUND_ERROR('Карточка с фильмом по указанному id не найдена');
+      } else {
+        next(err);
+      }
+    });
 };
+
+// module.exports.deleteMovie = (req, res, next) => {
+//   Movie.findById(req.params._id)
+//     .orFail(() => {
+//       throw new NOT_FOUND_ERROR('Карточка с фильмом по указанному id не найдена');
+//     })
+//     .then((movie) => {
+//       if (String(movie.owner) !== req.user._id) {
+//         throw new FORBIDDEN_ERROR('Запрещено удалять чужую карточку');
+//       }
+//       Movie.findByIdAndRemove(req.params._id)
+//         .then(() => res.send({ movie }))
+//         .catch(next);
+//     })
+//     .catch((err) => {
+//       if (err.name === 'CastError') {
+//         throw new BAD_REQUEST_ERROR('Переданы некорректные данные');
+//       } else {
+//         next(err);
+//       }
+//     });
+// };
