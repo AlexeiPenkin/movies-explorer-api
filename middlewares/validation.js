@@ -2,8 +2,8 @@ const { celebrate, Joi } = require('celebrate');
 const { isURL, isEmail } = require('validator');
 
 module.exports.getUserByIdValidation = celebrate({
-  params: Joi.object().keys({
-    userId: Joi.string().length(24).hex(),
+  body: Joi.object().keys({
+    userId: Joi.string().required().length(24).hex(),
   }),
 });
 
@@ -46,7 +46,7 @@ module.exports.loginValidation = celebrate({ /* /sigin */
 
 module.exports.userMovieIdValidation = celebrate({
   params: Joi.object().keys({
-    userMovieId: Joi.string().length(24).hex(),
+    _id: Joi.string().required().length(24).hex(),
   }),
 });
 
