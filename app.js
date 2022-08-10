@@ -9,6 +9,7 @@ const cookie = require('cookie-parser');
 const limiter = require('./middlewares/limiter');
 const { cors } = require('./middlewares/cors');
 const router = require('./routes/index');
+const keyErrorHandler = require('./middlewares/keyErrorHandler');
 
 const NOT_FOUND_ERROR = require('./errors/notfound-error');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -48,11 +49,7 @@ app.use(errorLogger);
 
 app.use(errors());
 
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-  res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
-  next();
-});
+app.use(keyErrorHandler);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
