@@ -40,7 +40,7 @@ module.exports.loginValidation = celebrate({ /* /sigin */
       }
       return error.message('Некорректный формат адреса');
     }),
-    password: Joi.string().required().min(8),
+    password: Joi.string().required(),
   }),
 });
 

@@ -5,6 +5,7 @@ const User = require('../models/user');
 const BAD_REQUEST_ERROR = require('../errors/bad-req-error');
 const NOT_FOUND_ERROR = require('../errors/notfound-error');
 const CONFLICT_ERROR = require('../errors/conflict-error');
+const UNAUTHORIZED_ERRROR = require('../errors/unauthorized-error');
 
 const { JWT_SECRET, NODE_ENV } = process.env;
 
@@ -45,12 +46,12 @@ module.exports.createUser = (req, res, next) => {
       }))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        return next(new NOT_FOUND_ERROR('Пользователь не найден'));
+        next(new NOT_FOUND_ERROR('Пользователь не найден'));
       }
       if (err.code === 11000) {
-        return next(new CONFLICT_ERROR('Email уже зарегистрирован'));
+        next(new CONFLICT_ERROR('Email уже зарегистрирован'));
       }
-      return next(err);
+      next(err);
     });
 };
 
@@ -71,7 +72,7 @@ module.exports.updateProfile = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
-        throw new BAD_REQUEST_ERROR('Переданы некорректные данные');
+        next(new BAD_REQUEST_ERROR('Переданы некорректные данные'));
       } else {
         next(err);
       }
@@ -85,11 +86,5 @@ module.exports.login = (req, res, next) => {
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
       res.send({ token });
     })
-    .catch((error) => {
-      if (error.name === 'ValidationError') {
-        throw new BAD_REQUEST_ERROR('Переданы некорректные данные');
-      } else {
-        next(error);
-      }
-    });
+    .catch(() => next(new UNAUTHORIZED_ERRROR('Необходима авторизация')));
 };

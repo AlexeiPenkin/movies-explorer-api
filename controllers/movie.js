@@ -4,7 +4,8 @@ const FORBIDDEN_ERROR = require('../errors/forbidden-error');
 const NOT_FOUND_ERROR = require('../errors/notfound-error');
 
 module.exports.getMovies = (req, res, next) => {
-  Movie.find({})
+  const owner = req.user._id;
+  Movie.find({ owner })
     .then((movies) => {
       res.status(200).send({ movies });
     })
@@ -44,7 +45,7 @@ module.exports.createMovie = (req, res, next) => {
       .send({ movie }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new BAD_REQUEST_ERROR('Переданы некорректные данные');
+        next(new BAD_REQUEST_ERROR('Переданы некорректные данные'));
       } else {
         next(err);
       }
@@ -71,7 +72,7 @@ module.exports.deleteMovie = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        throw new NOT_FOUND_ERROR('Карточка с фильмом по указанному id не найдена');
+        next(new NOT_FOUND_ERROR('Карточка с фильмом по указанному id не найдена'));
       } else {
         next(err);
       }
