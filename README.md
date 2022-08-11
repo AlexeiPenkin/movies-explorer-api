@@ -1,2 +1,2 @@
 # Ссылка на бэкенд проекта
-backend.movie.project.nomoredomains.xyz
+https://backend.movie.project.nomoredomains.xyz

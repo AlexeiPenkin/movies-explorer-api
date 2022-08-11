@@ -73,9 +73,9 @@ module.exports.updateProfile = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
         next(new BAD_REQUEST_ERROR('Переданы некорректные данные'));
-      } else {
-        next(err);
-      }
+      } else if (err.code === 11000) {
+        next(new CONFLICT_ERROR('Пользователем с данным email уже зарегистрирован'));
+      } else next(err);
     });
 };
 
