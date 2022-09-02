@@ -22,12 +22,12 @@ mongoose.connect(NODE_ENV === 'production' ? MONGO_DB : 'mongodb://localhost:270
   useNewUrlParser: true,
 });
 
+app.use(cors);
+
 app.use(cookie());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-app.use(cors);
 
 app.use(requestLogger);
 
