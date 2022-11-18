@@ -43,10 +43,10 @@ HTML,
 15.	MongoDB.
 16.	Webpack.
 
+# Ссылки:
 
-
-# Ссылка на GitHub
+GitHub:
 https://backend.movie.project.nomoredomains.xyz 
 
-# IP адрес (публичный)
+IP адрес (публичный):
 51.250.97.245
