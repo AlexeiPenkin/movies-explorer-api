@@ -45,7 +45,7 @@ HTML,
 
 # Ссылки:
 
-GitHub:
+Бэкенд:
 https://backend.movie.project.nomoredomains.xyz 
 
 IP адрес (публичный):
